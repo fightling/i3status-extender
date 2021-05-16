@@ -8,13 +8,22 @@ First add this crate to your dependencies in you `Cargo.toml` file:
 
 ```toml
 [dependencies]
-i3status_ext = "0.0.3"
+i3status_ext = "0.0.4"
+```
+
+To compile the following sample code you will need to add the `clap` program arguments crate too.
+
+```toml
+[dependencies]
+i3status_ext = "0.0.4"
+clap = "3.0.0-beta.2"
 ```
 
 Then add the external crate into you extension's source file and call `i3status_ext::begin()` once and `i3status_ext::update()` in a loop:
 
 ```rust
 extern crate i3status_ext;
+use clap::App;
 
 fn main() {
 

@@ -1,6 +1,6 @@
 # i3status_ext
 
-This is a crate which lets you extend the i3status display as described [here](https://i3wm.org/docs/i3status.html#_external_scripts_programs_with_i3status).
+This is a crate which lets you extend the *i3status* display as described [here](https://i3wm.org/docs/i3status.html#_external_scripts_programs_with_i3status).
 
 ## How to use
 
@@ -44,15 +44,20 @@ fn main() {
         .unwrap_or(0);
     let reverse = args.is_present("reverse");
 
+    let input = std::io::stdin();
+    let mut reader = BufReader::new(input.lock());
+    let output = std::io::stdout();
+    let mut writer = LineWriter::new(output.lock());
+
     // start reading i3status' output from stdin
-    i3status_ext::begin();
+    i3status_ext::begin(&mut reader, &mut writer);
 
     // prepare some text to insert
     let my_text = "Hello, World!";
 
     loop {
         // insert your part into i3status
-        i3status_ext::update("my_text", position, reverse, my_text);
+        i3status_ext::update(&mut reader, &mut writer, "my_text", position, reverse, my_text);
     }
 }
 ```
@@ -71,26 +76,24 @@ bar {
 }
 ```
 
-### Reference
+## Reference Documentation
 
-#### i3status_ext::begin()
+Beside this introduction there is a reference documentation which can be found [here](https://docs.rs/i3status_ext).
 
-Just call this function once at program start so that i3status_ext can read the header which comes initially from i3status.
+## Links
 
-##### Definition:
+### Website
 
-`pub fn begin()`
+This README tastes better at [i3status_ext.thats-software.com](https://i3status_ext.thats-software.com).
 
-#### i3status_ext::update()
+### *github* repository
 
-Place this call into a loop like in the example above to continuously add your custom item into the json data from i3status.
+For the source code see [this repository](https://github.com/fightling/i3status_ext) at *github.com*.
 
-##### Definition:
+### on *crates.io*
 
-`pub fn update(name: &str, position: usize, reverse: bool, what: &str)`
+Published at [*crates.io*](https://crates.io/crates/i3status_ext).
 
-##### Parameters:
+## License
 
--   `name` : Names your added status item in the json output
--   `position` : Position (beginning with  `0`) of which your item will be placed at within the orignal i3status.
--   `reverse` : If `true` the `position` will be counted backwards from the end.
+i3status_ext is licensed under the *MIT license* (LICENSE-MIT or http://opensource.org/licenses/MIT)

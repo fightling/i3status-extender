@@ -1,4 +1,4 @@
-# i3status_ext
+# i3status_ext [![Rust](https://github.com/fightling/i3status_ext/actions/workflows/rust.yml/badge.svg)](https://github.com/fightling/i3status_ext/actions/workflows/rust.yml)
 
 This is a crate which lets you extend the *i3status* display as described [here](https://i3wm.org/docs/i3status.html#_external_scripts_programs_with_i3status).
 
@@ -8,7 +8,7 @@ First add this crate to your dependencies in you `Cargo.toml` file:
 
 ```toml
 [dependencies]
-i3status_ext = "0.0.8"
+i3status_ext = "0.0.9"
 ```
 
 To compile the following sample code you will need to add the `clap` program arguments crate too.

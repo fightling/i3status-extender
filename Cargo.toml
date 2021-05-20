@@ -1,13 +1,13 @@
 [package]
 name = "i3status_ext"
-version = "0.0.8"
+version = "0.0.9"
 authors = ["Patrick Hoffmann fightling@elektropost.org>"]
 edition = "2018"
 description = "extend i3status"
 license = "MIT OR Apache-2.0"
 readme = "README.md"
-documentation = "https://github.com/fightling/i3status_ext"
-homepage = "https://github.com/fightling/i3status_ext"
+documentation = "https://docs.rs/i3status_ext"
+homepage = "https://i3status_ext.thats-software.com"
 keywords = ["i3", "i3wm", "i3status" ]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

@@ -2,7 +2,10 @@ extern crate serde_json;
 
 use regex::Regex;
 use serde::{Deserialize, Serialize};
-use std::io::{BufRead,LineWriter,Write};
+
+pub mod io;
+
+use io::*;
 
 #[cfg(test)]
 mod tests;
@@ -18,40 +21,58 @@ struct I3StatusItem {
     full_text: String,
 }
 
-/// Call this function once at program start so that `i3status_ext` can read the header
-/// from `stdin` which comes initially from i3status.
-pub fn begin<R: BufRead, W: Write>( reader: &mut R, writer: &mut LineWriter<W> ) -> std::io::Result<()>{
+// Internal
+fn begin_io<IO : Io>(io: &mut IO) -> std::io::Result<()> {
     // read first two lines, check and ignore them
-    let mut line = String::new();
-    reader.read_line(&mut line)?;
-    writer.write_all(line.as_bytes())?;
+    let line = io.read_line()?;
+    io.write_line(&line)?;
     assert!(line == "{\"version\":1}\n");
-    line = String::new();
-    reader.read_line(&mut line)?;
-    writer.write_all(line.as_bytes())?;
+    let line = io.read_line()?;
+    io.write_line(&line)?;
     assert!(line == "[\n");
-    Ok(())
+    return Ok(());
+}
+
+/// Call this function once at program start so that `i3status_ext` can pass-through the header
+/// from `stdin` which comes initially from i3status.
+pub fn begin() -> std::io::Result<StdIo> {
+    let mut io = StdIo::new();
+    begin_io(&mut io)?;
+    return Ok(io);
+}
+
+/// Call this function once at program start so that `i3status_ext` can pass-through the header
+/// from given String (used for tests).
+pub fn begin_str<'a>( input : &'a String) -> std::io::Result<StringInStdOut<'a>> {
+    let mut io = StringInStdOut::from_string(&input);
+    begin_io(&mut io)?;
+    return Ok(io);
 }
 
 /// Insert new an item into *i3status*'s json string at given position.
 /// Call this within a loop continuously to add your custom item into the json data from *i3status*.
 /// #### Parameters
-/// - `reader`:
+/// - `io`: input and output channels behind `Io` trait
 /// - `name`: name of the *i3status* item (could be anything)
 /// - `position`: insert item at this position (from left to right)
 /// - `reverse`: reverse `position` to count from  right to left.
 /// - `what`: text to insert
-pub fn update<R: BufRead, W: std::io::Write>( reader: &mut R, writer: &mut LineWriter<W>, name: &str, position: usize, reverse: bool, what: &str) -> std::io::Result<()> {
+pub fn update<IO: Io>(
+    io: &mut IO,
+    name: &str,
+    position: usize,
+    reverse: bool,
+    what: &str,
+) -> std::io::Result<()> {
     // read one line from stdin
-    let mut line = String::new();
-    reader.read_line(&mut line)?;
+    let mut line = io.read_line()?;
     // check if begin() was called
     assert!(line != "{\"version\":1}");
     assert!(line != "[");
     // handle prefix comma
     if line.chars().next().unwrap() == ',' {
         line.remove(0);
-        writer.write_all(b",")?;
+        io.write_line(",")?;
     }
     // read all incoming entries
     match serde_json::from_str(&line) {
@@ -72,11 +93,10 @@ pub fn update<R: BufRead, W: std::io::Write>( reader: &mut R, writer: &mut LineW
                 items.insert(position, w);
             }
             // format output back up json string
-            writer.write_all(format_json(format!("{:?}", items)).as_bytes())?;
+            io.write_line(&format_json(format!("{:?}", items)))?;
         }
-        _ => writer.write_all(line.as_bytes())?,
+        _ => io.write_line(&line)?,
     }
-    writer.write_all(b"\n")?;
     Ok(())
 }
 

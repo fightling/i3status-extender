@@ -8,7 +8,7 @@ First add this crate to your dependencies in you `Cargo.toml` file:
 
 ```toml
 [dependencies]
-i3status_ext = "0.0.5"
+i3status_ext = "0.0.6"
 ```
 
 To compile the following sample code you will need to add the `clap` program arguments crate too.
@@ -42,20 +42,15 @@ fn main() {
         .unwrap_or(0);
     let reverse = args.is_present("reverse");
 
-    let input = std::io::stdin();
-    let mut reader = BufReader::new(input.lock());
-    let output = std::io::stdout();
-    let mut writer = LineWriter::new(output.lock());
-
     // start reading i3status' output from stdin
-    i3status_ext::begin(&mut reader, &mut writer);
+    let mut io = i3status_ext::begin();
 
     // prepare some text to insert
     let my_text = "Hello, World!";
 
     loop {
         // insert your part into i3status
-        i3status_ext::update(&mut reader, &mut writer, "my_text", position, reverse, my_text);
+        i3status_ext::update(&mut io, "my_text", position, reverse, my_text);
     }
 }
 ```

@@ -1,6 +1,6 @@
 [package]
 name = "i3status_ext"
-version = "0.0.7"
+version = "0.0.8"
 authors = ["Patrick Hoffmann fightling@elektropost.org>"]
 edition = "2018"
 description = "extend i3status"

@@ -65,7 +65,7 @@ To activate your extension find the `bar` definition in your i3 configuration fi
 
 ```i3
 bar {
-  status_command i3status | my_own_i3status_extension -rp1"
+  status_command i3status | my_own_i3status_extension -rp1
 }
 ```
 
@@ -77,7 +77,7 @@ Beside this introduction there is a reference documentation which can be found [
 
 ### Website
 
-This README tastes better at [i3status_ext.thats-software.com](https://i3status_ext.thats-software.com).
+This README tastes better at [i3status_ext.thats-software.com](http://i3status_ext.thats-software.com).
 
 ### *github* repository
 

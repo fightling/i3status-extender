@@ -3,26 +3,8 @@ use std::io::*;
 /// trait for an interface that can read lines from any source and to stdout
 pub trait Io {
     fn read_line(&mut self) -> std::io::Result<String>;
-    fn write_line(&mut self, line: &str) -> std::io::Result<()>;
-}
-
-/// does not read or write anything
-pub struct NullIo {}
-
-// create Stdio instance
-impl NullIo {
-    pub fn new() -> NullIo {
-        NullIo{}
-    }
-}
-
-impl Io for NullIo {
-    /// read lines from stdin
-    fn read_line(&mut self) -> std::io::Result<String> {
-        return Ok(String::new())
-    }
-    fn write_line(&mut self, _line: &str) -> std::io::Result<()> {
-        Ok(())
+    fn write_line(&mut self, line: &str) -> std::io::Result<()> {
+        std::io::stdout().write_all(line.as_bytes())
     }
 }
 
@@ -42,9 +24,6 @@ impl Io for StdIo {
         let mut line = String::new();
         std::io::stdin().read_line(&mut line)?;
         return Ok(line)
-    }
-    fn write_line(&mut self, line: &str) -> std::io::Result<()> {
-        std::io::stdout().write_all(line.as_bytes())
     }
 }
 
@@ -66,8 +45,5 @@ impl<'a> Io for StringInStdOut<'a> {
         let mut line = String::new();
         self.reader.read_line(&mut line)?;
         return Ok(line);
-    }
-    fn write_line(&mut self, line: &str) -> std::io::Result<()> {
-        std::io::stdout().write_all(line.as_bytes())
     }
 }

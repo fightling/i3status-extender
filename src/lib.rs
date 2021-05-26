@@ -41,6 +41,11 @@ pub fn begin() -> std::io::Result<StdIo> {
     return Ok(io);
 }
 
+/// dummiy version of `begin()`
+pub fn begin_dummy() -> std::io::Result<StdIo> {
+    return Ok(StdIo::new());
+}
+
 /// Call this function once at program start so that `i3status_ext` can pass-through the header
 /// from given String (used for tests).
 pub fn begin_str<'a>( input : &'a String) -> std::io::Result<StringInStdOut<'a>> {

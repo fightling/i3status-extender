@@ -8,7 +8,7 @@ First add this crate to your dependencies in you `Cargo.toml` file:
 
 ```toml
 [dependencies]
-i3status_ext = "0.0.9"
+i3status_ext = "0.1.0-beta.1"
 ```
 
 To compile the following sample code you will need to add the `clap` program arguments crate too.
